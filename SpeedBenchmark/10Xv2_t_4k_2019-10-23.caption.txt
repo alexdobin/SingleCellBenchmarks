@@ -1,0 +1,7 @@
+Spped benchmarks for 10X v2 T-cell 4k sample (335M reads). 
+Server: vega: 
+Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
+18x2=36 cores
+RAM=384GB DDR4 2666
+Supermicro X11DPi-N(T)
+HDD=Seagate 12TB SAS x8 in RAID0
