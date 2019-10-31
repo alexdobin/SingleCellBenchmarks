@@ -1,0 +1,29 @@
+#
+### STARsolo 2.7.3a
+#
+STAR --readFilesCommand zcat  --runThreadN 20 --outSAMtype None \
+--soloType Droplet --soloCBwhitelist WL_10Xv3 \
+--genomeDir STARgenomeDir/ --readFilesPrefix $sample/ --readFilesIn `(cd $sample && ls *_R2_* | tr ' \n' ',')` `(cd $sample && ls *_R1_* | tr ' \n' ',')`
+
+
+#
+### alevin 0.12.0
+#
+salmon alevin -l ISR -1 *_R1_001.fastq.gz -2 *_R2_001.fastq.gz --chromium -p 20 -o ./ \
+-i alevin/transcripts_index --tgMap  alevin/transcript_to_gene.txt --dumpCsvCounts 1
+
+#
+### alevin 0.14.1
+#
+salmon alevin -l ISR -1 *_R1_001.fastq.gz -2 *_R2_001.fastq.gz --chromium -p 20 -o ./ \
+-i alevin/transcripts_index --tgMap alevin/transcript_to_gene.txt --dumpMtx
+
+#
+### kallisto/bustools 0.46.0/0.39.3
+#
+kallisto bus -i kallisto/k.idx -o bus_output/ -x 10xv3 -t 20 \
+pbmc_10k_v3_S1_L001_R1_001.fastq.gz pbmc_10k_v3_S1_L001_R2_001.fastq.gz pbmc_10k_v3_S1_L002_R1_001.fastq.gz pbmc_10k_v3_S1_L002_R2_001.fastq.gz
+
+bustools correct -w WL_10Xv3 -p output.bus | \
+bustools sort -T tmp/ -t 20 -m 4G -p - | \
+bustools count --genecounts -o genecount/genes -e matrix.ec -g transcript_to_gene.txt -t transcripts.txt -
